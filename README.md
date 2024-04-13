@@ -1,65 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
+<h1 align="center">Laravel Vue Admin Panel</h1>
+<h3 align="center">A Single page Vue admin panel for Laravel projects.</h3>
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<a href="https://packagist.org/packages/balajidharma/laravel-vue-admin-panel"><img src="https://poser.pugx.org/balajidharma/laravel-vue-admin-panel/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/balajidharma/laravel-vue-admin-panel"><img src="https://poser.pugx.org/balajidharma/laravel-vue-admin-panel/v/stable" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/balajidharma/laravel-vue-admin-panel"><img src="https://poser.pugx.org/balajidharma/laravel-vue-admin-panel/license" alt="License"></a>
 </p>
 
-## About Laravel
+## Built with
+- [Laravel 11](https://github.com/laravel/framework)
+- [spatie/laravel-permission](https://github.com/spatie/laravel-permission)
+- [Laravel Breeze](https://github.com/laravel/breeze)
+- [balajidharma/laravel-menu](https://github.com/balajidharma/laravel-menu)
+- [Vue 3](https://vuejs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Inertiajs](https://inertiajs.com/)
+- [Admin One - Admin Dashboard](https://github.com/justboil/admin-one-vue-tailwind)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### With Docker Desktop
+- To get started, you need to install [Docker Desktop](https://www.docker.com/products/docker-desktop).
+- You may run the following command in your terminal
+- Windows open WSL2 Linux terminal. [Docker Desktop WSL 2 backend](https://docs.docker.com/desktop/windows/wsl/)
+- `docker run --rm -v "$(pwd)":/opt -w /opt laravelsail/php83-composer:latest bash -c "composer create-project balajidharma/laravel-vue-admin-panel admin-app && cd admin-app && php artisan sail:install --with=mysql,redis,meilisearch,mailpit,selenium"`
+- `cd admin-app`
+- `./vendor/bin/sail pull mysql redis meilisearch mailpit selenium`
+- `./vendor/bin/sail build`
+- `./vendor/bin/sail up`
+- `./vendor/bin/sail npm install`
+- `./vendor/bin/sail npm run dev`
+- `./vendor/bin/sail artisan vendor:publish --tag=admin-core`
+- `./vendor/bin/sail artisan migrate --seed --seeder=AdminCoreSeeder`
+- Now open http://localhost/
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Without Docker Desktop
+- To get started, you need to install [PHP Composer](https://getcomposer.org/).
+- `composer create-project balajidharma/laravel-vue-admin-panel admin-app`
+- `cd admin-app`
+- Create a new MYSQL database and update database details in `.env` file
+- `php artisan vendor:publish --tag=admin-core`
+- `php artisan migrate --seed --seeder=AdminCoreSeeder`
+- `npm install`
+- `npm run dev`
+- `php artisan serve`
+- Now open http://localhost:8000/
 
-## Learning Laravel
+###### Super Admin Login
+- Email - superadmin@example.com
+- Password - password
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### Admin Configuration:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+To change the Admin Prefix, change `prefix` on `config/admin.php` or add the `ADMIN_PREFIX` on env 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```php
+'prefix' => env('ADMIN_PREFIX', 'admin'),
+```
 
-## Laravel Sponsors
+## Also Try
+- [Build a Vue admin panel from scratch](https://blog.devgenius.io/laravel-creates-a-vue-admin-panel-from-scratch-part-1-installation-and-authentication-56c451d4d697)
+- [Basic Laravel Admin Panel - Build with Blade template](https://github.com/balajidharma/basic-laravel-admin-panel)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Screenshots
+<p align="center">
+	<img src="https://user-images.githubusercontent.com/6037466/184546912-efd044ad-cb66-4057-9eee-e9c53447763b.png" >
+	<br/><br/>
+	<img src="https://user-images.githubusercontent.com/6037466/184546928-0de1d84a-4dd9-4f7b-a3ac-b848209d0aef.png" >
+	<br/><br/>
+	<img src="https://user-images.githubusercontent.com/6037466/184547401-1c481008-e013-4ba0-b9a8-3eaf3ff7b9a1.png" >
+    <br/><br/>
+	<img src="https://user-images.githubusercontent.com/6037466/184547433-25f6a5a6-4e53-4448-948a-82f18a58d84c.png">
+	<br/><br/>
+	<img src="https://user-images.githubusercontent.com/6037466/184547446-d482df44-0835-4a37-8482-83d5279269fb.png">
+	<br/><br/>
+	<img src="https://user-images.githubusercontent.com/6037466/184570672-6413384d-a5c4-461b-9c8e-d97ede29a21f.png">
+</p>
 
 ## License
 
