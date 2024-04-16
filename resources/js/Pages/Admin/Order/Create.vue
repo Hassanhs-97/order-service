@@ -14,9 +14,8 @@ import BaseButton from '@/Components/BaseButton.vue'
 import BaseButtons from '@/Components/BaseButtons.vue'
 
 const form = useForm({
-  name: '',
-  machine_name: '',
-  description: ''
+  customer_name: '',
+  customer_address: ''
 
 })
 </script>
@@ -44,47 +43,47 @@ const form = useForm({
         @submit.prevent="form.post(route('admin.menu.store'))"
       >
         <FormField
-          label="Name"
-          :class="{ 'text-red-400': form.errors.name }"
+          label="Customer Name"
+          :class="{ 'text-red-400': form.errors.customer_name }"
         >
           <FormControl
-            v-model="form.name"
+            v-model="form.customer_name"
             type="text"
-            placeholder="Enter Name"
-            :error="form.errors.name"
+            placeholder="Enter Customer Name"
+            :error="form.errors.customer_name"
           >
-            <div class="text-red-400 text-sm" v-if="form.errors.name">
-              {{ form.errors.name }}
+            <div class="text-red-400 text-sm" v-if="form.errors.customer_name">
+              {{ form.errors.customer_name }}
             </div>
           </FormControl>
         </FormField>
         <FormField
-          label="Machine Name"
-          :class="{ 'text-red-400': form.errors.machine_name }"
+          label="Customer Address"
+          :class="{ 'text-red-400': form.errors.customer_address }"
         >
           <FormControl
-            v-model="form.machine_name"
+            v-model="form.customer_address"
             type="text"
-            placeholder="Enter Machine Name"
-            :error="form.errors.name"
+            placeholder="Enter Customer Address"
+            :error="form.errors.customer_address"
           >
-            <div class="text-red-400 text-sm" v-if="form.errors.machine_name">
-              {{ form.errors.machine_name }}
+            <div class="text-red-400 text-sm" v-if="form.errors.customer_address">
+              {{ form.errors.customer_address }}
             </div>
           </FormControl>
         </FormField>
         <FormField
-          label="Description"
-          :class="{ 'text-red-400': form.errors.description }"
+          label="Items"
+          :class="{ 'text-red-400': form.errors.items }"
         >
           <FormControl
-            v-model="form.description"
-            type="text"
-            placeholder="Enter Description"
-            :error="form.errors.description"
+            v-model="form.items"
+            type="select"
+            placeholder="Add Items"
+            :error="form.errors.items"
           >
-            <div class="text-red-400 text-sm" v-if="form.errors.description">
-              {{ form.errors.description }}
+            <div class="text-red-400 text-sm" v-if="form.errors.items">
+              {{ form.errors.items }}
             </div>
           </FormControl>
         </FormField>

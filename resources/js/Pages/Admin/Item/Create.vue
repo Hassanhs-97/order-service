@@ -60,7 +60,7 @@ const form = useForm({
                         v-model="form.price"
                         type="text"
                         placeholder="Enter Price"
-                        :error="form.errors.name"
+                        :error="form.errors.price"
                     >
                         <div
                             class="text-red-400 text-sm"
