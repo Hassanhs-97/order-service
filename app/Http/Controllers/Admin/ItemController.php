@@ -55,7 +55,7 @@ class ItemController extends Controller
                 'create' => Auth::user()->can('item create'),
                 'edit'   => Auth::user()->can('item edit'),
                 'delete' => Auth::user()->can('item delete'),
-                'manage' => Auth::user()->can('item.item index'),
+                'manage' => Auth::user()->can('item index'),
             ],
         ]);
     }
