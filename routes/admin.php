@@ -14,7 +14,7 @@ Route::group([
     Route::resource('user', 'UserController');
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
-    Route::resource('order-items', 'OrderItemController');
+    Route::resource('items', 'ItemController');
     Route::resource('menu', 'MenuController')->except([
         'show',
     ]);

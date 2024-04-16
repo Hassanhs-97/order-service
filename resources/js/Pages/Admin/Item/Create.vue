@@ -30,7 +30,7 @@ const form = useForm({
         main
       >
         <BaseButton
-          :route-name="route('admin.order-items.index')"
+          :route-name="route('admin.items.index')"
           :icon="mdiArrowLeftBoldOutline"
           label="Back"
           color="white"
@@ -40,7 +40,7 @@ const form = useForm({
       </SectionTitleLineWithButton>
       <CardBox
         form
-        @submit.prevent="form.post(route('admin.order-items.store'))"
+        @submit.prevent="form.post(route('admin.items.store'))"
       >
         <FormField
           label="Name"

@@ -18,7 +18,7 @@ import Pagination from "@/Components/Admin/Pagination.vue"
 import Sort from "@/Components/Admin/Sort.vue"
 
 const props = defineProps({
-  orderItems: {
+  items: {
     type: Object,
     default: () => ({}),
   },
@@ -40,7 +40,7 @@ const formDelete = useForm({})
 
 function destroy(id) {
   if (confirm("Are you sure you want to delete?")) {
-    formDelete.delete(route("admin.order-items.destroy", id))
+    formDelete.delete(route("admin.items.destroy", id))
   }
 }
 </script>
@@ -56,7 +56,7 @@ function destroy(id) {
       >
         <BaseButton
           v-if="can.delete"
-          :route-name="route('admin.order-items.create')"
+          :route-name="route('admin.items.create')"
           :icon="mdiPlus"
           label="Add"
           color="info"
@@ -73,7 +73,7 @@ function destroy(id) {
         {{ $page.props.flash.message }}
       </NotificationBar>
       <CardBox class="mb-6" has-table>
-        <form @submit.prevent="form.get(route('admin.order-items.index'))">
+        <form @submit.prevent="form.get(route('admin.items.index'))">
           <div class="py-2 flex">
             <div class="flex pl-4">
               <input
@@ -115,7 +115,7 @@ function destroy(id) {
           </thead>
 
           <tbody>
-            <tr v-for="orderItem in orderItems.data" :key="orderItem.id">
+            <tr v-for="orderItem in items.data" :key="orderItem.id">
               <td data-label="Name">
                   {{ orderItem.name }}
               </td>
@@ -129,7 +129,7 @@ function destroy(id) {
                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
                   <BaseButton
                     v-if="can.edit"
-                    :route-name="route('admin.order-items.edit', orderItem.id)"
+                    :route-name="route('admin.items.edit', orderItem.id)"
                     color="info"
                     :icon="mdiSquareEditOutline"
                     small
@@ -147,7 +147,7 @@ function destroy(id) {
           </tbody>
         </table>
         <div class="py-4">
-          <Pagination :data="orderItems" />
+          <Pagination :data="items" />
         </div>
       </CardBox>
     </SectionMain>

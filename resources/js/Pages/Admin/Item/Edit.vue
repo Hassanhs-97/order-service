@@ -14,7 +14,7 @@ import BaseButton from '@/Components/BaseButton.vue'
 import BaseButtons from '@/Components/BaseButtons.vue'
 
 const props = defineProps({
-  orderItem: {
+  item: {
     type: Object,
     default: () => ({}),
   },
@@ -22,8 +22,8 @@ const props = defineProps({
 
 const form = useForm({
   _method: 'put',
-  name: props.orderItem.name,
-  price: props.orderItem.price
+  name: props.item.name,
+  price: props.item.price
 })
 </script>
 
@@ -37,7 +37,7 @@ const form = useForm({
         main
       >
         <BaseButton
-          :route-name="route('admin.order-items.index')"
+          :route-name="route('admin.items.index')"
           :icon="mdiArrowLeftBoldOutline"
           label="Back"
           color="white"
@@ -47,7 +47,7 @@ const form = useForm({
       </SectionTitleLineWithButton>
       <CardBox
         form
-        @submit.prevent="form.post(route('admin.order-items.update', props.orderItem.id))"
+        @submit.prevent="form.post(route('admin.items.update', props.item.id))"
       >
         <FormField
           label="Name"
@@ -67,7 +67,7 @@ const form = useForm({
         <FormField
           label="Order Item Price"
         >
-        <div>{{ props.orderItem.price }}</div>
+        <div>{{ props.item.price }}</div>
         </FormField>
         <template #footer>
           <BaseButtons>
