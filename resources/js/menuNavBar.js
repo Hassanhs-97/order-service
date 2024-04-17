@@ -10,29 +10,29 @@ import {
     mdiThemeLightDark,
     mdiGithub
   } from '@mdi/js'
-  
+
   export default [
-    {
-      icon: mdiMenu,
-      label: 'Sample menu',
-      menu: [
-        {
-          icon: mdiClockOutline,
-          label: 'Item One'
-        },
-        {
-          icon: mdiCloud,
-          label: 'Item Two'
-        },
-        {
-          isDivider: true
-        },
-        {
-          icon: mdiCrop,
-          label: 'Item Last'
-        }
-      ]
-    },
+    // {
+    //   icon: mdiMenu,
+    //   label: 'Sample menu',
+    //   menu: [
+    //     {
+    //       icon: mdiClockOutline,
+    //       label: 'Item One'
+    //     },
+    //     {
+    //       icon: mdiCloud,
+    //       label: 'Item Two'
+    //     },
+    //     {
+    //       isDivider: true
+    //     },
+    //     {
+    //       icon: mdiCrop,
+    //       label: 'Item Last'
+    //     }
+    //   ]
+    // },
     {
       isCurrentUser: true,
       menu: [
@@ -41,14 +41,14 @@ import {
           label: 'My Profile',
           to: '/admin/edit-account-info'
         },
-        {
-          icon: mdiCogOutline,
-          label: 'Settings'
-        },
-        {
-          icon: mdiEmail,
-          label: 'Messages'
-        },
+        // {
+        //   icon: mdiCogOutline,
+        //   label: 'Settings'
+        // },
+        // {
+        //   icon: mdiEmail,
+        //   label: 'Messages'
+        // },
         {
           isDivider: true
         },
@@ -65,13 +65,13 @@ import {
       isDesktopNoLabel: true,
       isToggleLightDark: true
     },
-    {
-      icon: mdiGithub,
-      label: 'GitHub',
-      isDesktopNoLabel: true,
-      href: 'https://github.com/balajidharma/laravel-vue-admin-panel',
-      target: '_blank'
-    },
+    // {
+    //   icon: mdiGithub,
+    //   label: 'GitHub',
+    //   isDesktopNoLabel: true,
+    //   href: 'https://github.com/balajidharma/laravel-vue-admin-panel',
+    //   target: '_blank'
+    // },
     {
       icon: mdiLogout,
       label: 'Log out',
