@@ -9,6 +9,7 @@ use BalajiDharma\LaravelAdminCore\Requests\UpdateMenuItemRequest;
 use BalajiDharma\LaravelMenu\Models\Menu;
 use BalajiDharma\LaravelMenu\Models\MenuItem;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class MenuItemController extends Controller
@@ -61,12 +62,16 @@ class MenuItemController extends Controller
      */
     public function store(StoreMenuItemRequest $request, Menu $menu)
     {
-        $menu->menuItems()->create($request->except(['roles']));
+        DB::transaction(function () use ($request, $menu) {
 
-        $roles = $request->roles ?? [];
-        if(!empty($roles)) {
-            $menu->assignRole($roles);
-        }
+            $menu->menuItems()->create($request->except(['roles']));
+
+            if ($request->filled('roles')) {
+                 $roles = Role::whereIn('id', $request->roles)->get();
+                 $menu->syncRoles($roles);
+         
+            }
+        });
 
         return redirect()->route('admin.menu.item.index', $menu->id)
             ->with('message', 'Menu created successfully.');
@@ -93,10 +98,14 @@ class MenuItemController extends Controller
      */
     public function update(UpdateMenuItemRequest $request, Menu $menu, MenuItem $item)
     {
-        $item->update($request->except(['roles']));
+        DB::transaction(function () use ($request, $item) {
+            $item->update($request->except(['roles']));
 
-        $roles = $request->roles ?? [];
-        $item->syncRoles($roles);
+            if ($request->filled('roles')) {
+                $roles = Role::whereIn('id', $request->roles)->get();
+                $item->syncRoles($roles);
+            }
+        });
 
         return redirect()->route('admin.menu.item.index', $menu->id)
             ->with('message', 'Menu Item updated successfully.');
