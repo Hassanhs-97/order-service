@@ -14,4 +14,14 @@ class Item extends Model
         'name',
         'price',
     ];
+
+    /**
+     * Get options forom items.
+     *
+     * @return array
+     */
+    public static function selectOptions()
+    {
+        return self::all()->toArray();
+    }
 }

@@ -66,8 +66,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $itemOptions = $items = Item::all()->toArray();
-        return Inertia::render('Admin/Order/Create', ['itemOptions' => $itemOptions, 'items' => $items]);
+        $itemOptions = Item::selectOptions();
+        return Inertia::render('Admin/Order/Create', ['itemOptions' => $itemOptions]);
     }
 
     /**
