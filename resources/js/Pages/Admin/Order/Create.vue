@@ -18,6 +18,7 @@ const form = useForm({
     item_price: "",
     item_count: "",
     item_total: "",
+    order_description: "",
 });
 const props = defineProps({
     itemOptions: {
@@ -39,40 +40,50 @@ const addItem = () => {
     localItems.push({
         items: "",
         item_price: 0,
-        item_count: 0,
+        item_count: 1,
         item_total: 0,
     });
 };
+
+const totalPrice = computed(() => {
+    return localItems.reduce((acc, item) => acc + item.item_total, 0);
+});
 
 const calculateItemPrice = (item) => {
     let selectedItem = props.itemOptions.find((i) => i.id == item.items);
 
     item.item_price = selectedItem.price;
-    item.item_total = item.item_price * item.item_count;
+    updateItemTotal(item);
 };
-
 const updateItemTotal = (item) => {
     item.item_total = item.item_price * item.item_count;
 };
 
-const getItemTotal = computed(() => {
-    if (!Array.isArray(localItems.value) || localItems.value.length === 0) {
-        return 0; // Return default value or handle the case when localItems is not an array or is empty
-    }
+const handleSubmit = () => {
+    const data = {
+        customer_name: form.customer_name,
+        customer_address: form.customer_address,
+        items: localItems.map((item) => ({
+            id: item.items,
+            price: item.item_price,
+            count: item.item_count,
+            total: item.item_total,
+        })),
+        order_description: form.order_description,
+    };
+    console.log(data);
 
-    return localItems.value.reduce((total, item) => {
-        return total + (item.item_price * item.item_count);
-    }, 0);
-});
+    form.post(route("admin.orders.store"), data);
+};
 </script>
 
 <template>
     <LayoutAuthenticated>
-        <Head title="Create menu" />
+        <Head title="Create Order" />
         <SectionMain>
-            <SectionTitleLineWithButton :icon="mdiMenu" title="Add menu" main>
+            <SectionTitleLineWithButton :icon="mdiMenu" title="Add Order" main>
                 <BaseButton
-                    :route-name="route('admin.menu.index')"
+                    :route-name="route('admin.orders.index')"
                     :icon="mdiArrowLeftBoldOutline"
                     label="Back"
                     color="white"
@@ -80,10 +91,7 @@ const getItemTotal = computed(() => {
                     small
                 />
             </SectionTitleLineWithButton>
-            <CardBox
-                form
-                @submit.prevent="form.post(route('admin.menu.store'))"
-            >
+            <CardBox form @submit.prevent="form.post(handleSubmit)">
                 <FormField
                     label="Customer Name"
                     :class="{ 'text-red-400': form.errors.customer_name }"
@@ -125,6 +133,7 @@ const getItemTotal = computed(() => {
                         <FormField
                             label="Select Item"
                             :class="{ 'text-red-400': form.errors.items }"
+                            class="w-1/4"
                         >
                             <FormControl
                                 v-model="i.items"
@@ -145,12 +154,14 @@ const getItemTotal = computed(() => {
                         <FormField
                             label="Item Price"
                             :class="{ 'text-red-400': form.errors.item_price }"
+                            class="w-1/4"
                         >
                             <FormControl
                                 v-model="i.item_price"
                                 type="number"
                                 placeholder="0"
                                 :error="form.errors.item_price"
+                                :disabled="true"
                             >
                                 <div
                                     class="text-red-400 text-sm"
@@ -163,6 +174,7 @@ const getItemTotal = computed(() => {
                         <FormField
                             label="Item Count"
                             :class="{ 'text-red-400': form.errors.item_count }"
+                            class="w-1/4"
                         >
                             <FormControl
                                 v-model="localItems[index].item_count"
@@ -183,9 +195,9 @@ const getItemTotal = computed(() => {
                             :class="{ 'text-red-400': form.errors.item_total }"
                         >
                             <FormControl
-                                v-model="getItemTotal"
+                                v-model="localItems[index].item_total"
                                 type="number"
-                                :value="calculateItemTotal"
+                                :value="updateItemTotal(i)"
                             >
                                 <div
                                     class="text-red-400 text-sm"
@@ -206,6 +218,26 @@ const getItemTotal = computed(() => {
                         @click="addItem"
                     />
                 </BaseButtons>
+
+                <FormField
+                    label="Order Description"
+                    :class="{ 'text-red-400': form.errors.order_description }"
+                    class="mt-10"
+                >
+                    <FormControl
+                        v-model="form.order_description"
+                        type="textarea"
+                        placeholder="Add description about order"
+                        :error="form.errors.order_description"
+                    >
+                        <div
+                            class="text-red-400 text-sm"
+                            v-if="form.errors.order_description"
+                        >
+                            {{ form.errors.order_description }}
+                        </div>
+                    </FormControl>
+                </FormField>
                 <template #footer>
                     <BaseButtons>
                         <BaseButton
@@ -215,6 +247,10 @@ const getItemTotal = computed(() => {
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
                         />
+                        <div class="flex items-center">
+                            <span>Total Price:</span>
+                            <span class="ml-2">{{ totalPrice }}</span>
+                        </div>
                     </BaseButtons>
                 </template>
             </CardBox>
