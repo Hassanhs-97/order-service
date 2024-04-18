@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Item;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -65,7 +66,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Order/Create');
+        $itemOptions = Item::selectOptions();
+        return Inertia::render('Admin/Order/Create', ['itemOptions' => $itemOptions]);
     }
 
     /**
