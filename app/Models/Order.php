@@ -12,5 +12,11 @@ class Order extends Model
     protected $fillable = [
         'customer_name',
         'customer_address',
+        'order_description',
+        'total_price',
     ];
+
+    public function items() {
+        return $this->belongsToMany(Item::class, 'order_items');
+    }
 }

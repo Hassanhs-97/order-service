@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\Admin\StoreItemRequest;
-use App\Http\Requests\Admin\UpdateItemRequest;
+use App\Http\Requests\Admin\Item\StoreItemRequest;
+use App\Http\Requests\Admin\Item\UpdateItemRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;

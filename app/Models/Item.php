@@ -24,4 +24,8 @@ class Item extends Model
     {
         return self::all()->toArray();
     }
+
+    public function orders() {
+        return $this->belongsToMany(Order::class);
+    }
 }

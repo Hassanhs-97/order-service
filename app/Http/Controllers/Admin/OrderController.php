@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Order\StoreOrderRequest;
 use App\Models\Item;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class OrderController extends Controller
@@ -77,10 +79,25 @@ class OrderController extends Controller
      */
     public function store(StoreOrderRequest $request)
     {
-        Order::create([
-            'name'  => $request->name,
-            'price' => $request->price,
-        ]);
+        $totalPrice = 0;
+        $itemsId    = [];
+        collect($request->input('items'))->map(function($item) use(&$totalPrice, &$itemsId){
+            $itemsId[] = $item['id'];
+            return $totalPrice += $item['price'];
+        });
+
+        DB::transaction(function () use($request, $totalPrice, $itemsId){
+            $order = Order::create([
+                'customer_name'     => $request->input('customer_name'),
+                'customer_address'  => $request->input('customer_address'),
+                'order_description' => $request->input('order_description'),
+                'total_price'       => $totalPrice
+            ]);
+    
+            $items = Item::whereIn('id', array_unique($itemsId))->get()->pluck('id');
+    
+            $order->items()->attach($items);
+        });
 
         return redirect()->route('admin.orders.index')
             ->with('message', 'order created successfully.');

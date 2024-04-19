@@ -44,6 +44,7 @@ const addItem = () => {
         item_total: 0,
     });
 };
+const csrf = "{{ csrf_token() }}";
 
 const totalPrice = computed(() => {
     return localItems.reduce((acc, item) => acc + item.item_total, 0);
@@ -60,20 +61,15 @@ const updateItemTotal = (item) => {
 };
 
 const handleSubmit = () => {
-    const data = {
-        customer_name: form.customer_name,
-        customer_address: form.customer_address,
-        items: localItems.map((item) => ({
-            id: item.items,
-            price: item.item_price,
-            count: item.item_count,
-            total: item.item_total,
-        })),
-        order_description: form.order_description,
-    };
-    console.log(data);
+    const itemsData = localItems.map((item) => ({
+        id: item.items,
+        price: item.item_price,
+        count: item.item_count,
+        total: item.item_total,
+    }));
+    form.items = itemsData;
 
-    form.post(route("admin.orders.store"), data);
+    form.post(route("admin.orders.store"), { _token: csrf });
 };
 </script>
 
@@ -91,7 +87,7 @@ const handleSubmit = () => {
                     small
                 />
             </SectionTitleLineWithButton>
-            <CardBox form @submit.prevent="form.post(handleSubmit)">
+            <CardBox form @submit.prevent="handleSubmit">
                 <FormField
                     label="Customer Name"
                     :class="{ 'text-red-400': form.errors.customer_name }"
