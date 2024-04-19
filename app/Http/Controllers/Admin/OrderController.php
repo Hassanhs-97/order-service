@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Order\StoreOrderRequest;
 use App\Models\Item;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -30,7 +31,7 @@ class OrderController extends Controller
         $orders = (new Order())->newQuery();
 
         if (request()->has('search')) {
-            $orders->where('name', 'Like', '%' . request()->input('search') . '%');
+            $orders->where('customer_name', 'Like', '%' . request()->input('search') . '%');
         }
 
         if (request()->query('sort')) {
@@ -81,12 +82,20 @@ class OrderController extends Controller
     {
         $totalPrice = 0;
         $itemsId    = [];
-        collect($request->input('items'))->map(function($item) use(&$totalPrice, &$itemsId){
+        $orderItems      = [];
+        collect($request->input('items'))->map(function($item) use(&$totalPrice, &$itemsId, &$orderItems){
             $itemsId[] = $item['id'];
+            $orderItems[] = [
+                'item_id'    => Item::findOrFail($item['id'])->id,
+                'order_id'   => null,
+                'item_price' => $item['price'],
+                'item_count' => $item['count'],
+                'item_total' => $item['total'],
+            ];
             return $totalPrice += $item['price'];
         });
 
-        DB::transaction(function () use($request, $totalPrice, $itemsId){
+        DB::transaction(function () use($request, $totalPrice, $itemsId, $orderItems){
             $order = Order::create([
                 'customer_name'     => $request->input('customer_name'),
                 'customer_address'  => $request->input('customer_address'),
@@ -94,9 +103,15 @@ class OrderController extends Controller
                 'total_price'       => $totalPrice
             ]);
     
-            $items = Item::whereIn('id', array_unique($itemsId))->get()->pluck('id');
-    
-            $order->items()->attach($items);
+            foreach($orderItems as $orderItem) {
+                OrderItem::create([
+                    'order_id'   => $order->id,
+                    'item_id'    => $orderItem['item_id'],
+                    'item_price' => $orderItem['item_price'],
+                    'item_count' => $orderItem['item_count'],
+                    'item_total' => $orderItem['item_total'],
+                ]);
+            }
         });
 
         return redirect()->route('admin.orders.index')
@@ -110,8 +125,21 @@ class OrderController extends Controller
      */
     public function edit(Order $order)
     {
+        $itemOptions = Item::selectOptions();
+        $orderItems = $order->orderItems;
+        $orderItems = $orderItems->map(function($item) {
+            return [
+                'items'      => $item->id,
+                'item_price' => $item->item_price,
+                'item_count' => $item->item_count,
+                'item_total' => $item->item_total,
+            ];
+        });
+
         return Inertia::render('Admin/Order/Edit', [
-            'order' => $order,
+            'order'       => $order,
+            'itemOptions' => $itemOptions,
+            'orderItems'  => $orderItems,
         ]);
     }
 

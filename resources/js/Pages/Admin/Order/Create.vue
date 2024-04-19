@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, reactive } from "vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { mdiMenu, mdiArrowLeftBoldOutline } from "@mdi/js";
+import { mdiMenu, mdiArrowLeftBoldOutline, mdiTrashCan } from "@mdi/js";
 import LayoutAuthenticated from "@/Layouts/LayoutAuthenticated.vue";
 import SectionMain from "@/Components/SectionMain.vue";
 import SectionTitleLineWithButton from "@/Components/SectionTitleLineWithButton.vue";
@@ -20,6 +20,7 @@ const form = useForm({
     item_total: "",
     order_description: "",
 });
+
 const props = defineProps({
     itemOptions: {
         type: Object,
@@ -58,6 +59,10 @@ const calculateItemPrice = (item) => {
 };
 const updateItemTotal = (item) => {
     item.item_total = item.item_price * item.item_count;
+};
+
+const handleRemoveItem = (index) => {
+    localItems.splice(index, 1);
 };
 
 const handleSubmit = () => {
@@ -202,6 +207,18 @@ const handleSubmit = () => {
                                     {{ form.errors.item_total }}
                                 </div>
                             </FormControl>
+                        </FormField>
+                        <FormField
+                            label="Operation"
+                            class="text-red-400 w-1/10"
+                        >
+                            <BaseButton
+                                color="danger"
+                                :icon="mdiTrashCan"
+                                small
+                                class="mt-2"
+                                @click="handleRemoveItem(index)"
+                            />
                         </FormField>
                     </div>
                 </div>

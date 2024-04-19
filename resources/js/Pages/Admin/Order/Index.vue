@@ -111,6 +111,12 @@ function destroy(id) {
               <th>
                 Customer Address
               </th>
+              <th>
+                Order Description
+              </th>
+              <th>
+                Total Price
+              </th>
               <th v-if="can.edit || can.delete || can.manage">Actions</th>
             </tr>
           </thead>
@@ -122,6 +128,12 @@ function destroy(id) {
               </td>
                <td data-label="customer_address">
                   {{ order.customer_address }}
+              </td>
+               <td data-label="customer_address">
+                  {{ order.order_description }}
+              </td>
+               <td data-label="customer_address">
+                  {{ order.total_price }}
               </td>
               <td
                 v-if="can.edit || can.delete || can.manage"
