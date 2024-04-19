@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('customer_address');
             $table->text('order_description')->nullable();
             $table->unsignedBigInteger('total_price')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
