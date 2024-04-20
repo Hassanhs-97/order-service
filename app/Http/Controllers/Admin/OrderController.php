@@ -7,9 +7,12 @@ use App\Http\Requests\Admin\Order\StoreOrderRequest;
 use App\Models\Item;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
+use Mpdf\Mpdf;
 
 class OrderController extends Controller
 {
@@ -237,5 +240,29 @@ class OrderController extends Controller
 
         return redirect()->route('admin.orders.index')
             ->with('message', __('order deleted successfully'));
+    }
+
+    /**
+     * Download order pdf.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function downloadOrderPdf(Order $order)
+    {
+        try {
+            $pdfContent = View::make('orders.template', [
+                'order'      => $order,
+                'orderItems' => $order->orderItems,
+            ])->render();
+    
+            $mpdf = new Mpdf();
+            $mpdf->WriteHtml($pdfContent);
+            $filename = 'order-' . $order->id . '.pdf';
+    
+            return $mpdf->Output($filename, 'D');
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage(), 500);
+        }
     }
 }

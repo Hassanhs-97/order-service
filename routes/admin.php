@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\DashboardController;
 use Inertia\Inertia;
 
@@ -14,6 +15,7 @@ Route::group([
     Route::resource('role', 'RoleController');
     Route::resource('permission', 'PermissionController');
     Route::resource('items', 'ItemController');
+    Route::get('orders/downloadOrderPdf/{order}', [OrderController::class, 'downloadOrderPdf'])->name('orders.downloadOrderPdf');
     Route::resource('orders', 'OrderController');
     Route::resource('menu', 'MenuController')->except([
         'show',

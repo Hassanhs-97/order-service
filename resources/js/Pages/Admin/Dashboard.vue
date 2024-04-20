@@ -4,6 +4,7 @@ import {
     mdiAccountMultiple,
     mdiInvoice,
     mdiChartTimelineVariant,
+    mdiListBox
 } from "@mdi/js";
 import SectionMain from "@/Components/SectionMain.vue";
 import CardBoxWidget from "@/Components/CardBoxWidget.vue";
@@ -52,7 +53,7 @@ const props = defineProps({
                 />
                 <CardBoxWidget
                     color="text-red-500"
-                    :icon="mdiChartTimelineVariant"
+                    :icon="mdiListBox"
                     :number="props.totalItems"
                     label="Total Items"
                 />
