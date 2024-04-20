@@ -47,22 +47,38 @@ const addItem = () => {
         item_total: 0,
     });
 };
-const csrf = "{{ csrf_token() }}";
 
 const totalPrice = computed(() => {
     return localItems.reduce((acc, item) => acc + item.item_total, 0);
 });
 
-const calculateItemPrice = (item) => {
-    let selectedItem = props.itemOptions.find((i) => i.id == item.items);
+const calculateItemPrice = (item, index) => {
+    const selectedItemId = item.items;
+
+    const isDuplicate = localItems.some(
+        (existingItem, existingIndex) =>
+            existingItem.items === selectedItemId && existingIndex !== index
+    );
+
+    if (isDuplicate) {
+        alert(
+            "This item is already selected in another row. Please choose a different item."
+        );
+        item.items = "";
+        return;
+    }
+
+    let selectedItem = props.itemOptions.find((i) => i.id == selectedItemId);
 
     if (selectedItem) {
         item.item_price = selectedItem.price;
+        updateItemTotal(item);
     } else {
-        console.error(`Item with ID ${item.items} not found in options`);
+        item.items = "";
+        console.error(`Item with ID ${selectedItemId} not found in options`);
     }
-    updateItemTotal(item);
 };
+
 const updateItemTotal = (item) => {
     item.item_total = item.item_price * item.item_count;
 };
@@ -73,14 +89,14 @@ const handleRemoveItem = (index) => {
 
 const handleSubmit = () => {
     const itemsData = localItems.map((item) => ({
-        id: item.items,
+        id   : item.items,
         price: item.item_price,
         count: item.item_count,
         total: item.item_total,
     }));
     form.items = itemsData;
 
-    form.post(route("admin.orders.store"), { _token: csrf });
+    form.post(route("admin.orders.update", props.order.id), { _token: "{{ csrf_token() }}" });
 };
 </script>
 
@@ -98,7 +114,7 @@ const handleSubmit = () => {
                     small
                 />
             </SectionTitleLineWithButton>
-            <CardBox form @submit.prevent="form.post(handleSubmit)">
+            <CardBox form @submit.prevent="handleSubmit">
                 <FormField
                     label="Customer Name"
                     :class="{ 'text-red-400': form.errors.customer_name }"
@@ -148,7 +164,9 @@ const handleSubmit = () => {
                                 placeholder="Add Items"
                                 :error="form.errors.items"
                                 :options="itemOptions"
-                                @change="calculateItemPrice(localItems[index])"
+                                @change="
+                                    calculateItemPrice(localItems[index], index)
+                                "
                             >
                                 <div
                                     class="text-red-400 text-sm"
@@ -267,6 +285,10 @@ const handleSubmit = () => {
                             :class="{ 'opacity-25': form.processing }"
                             :disabled="form.processing"
                         />
+                        <div class="flex items-center">
+                            <span>Total Price:</span>
+                            <span class="ml-2">{{ totalPrice }}</span>
+                        </div>
                     </BaseButtons>
                 </template>
             </CardBox>

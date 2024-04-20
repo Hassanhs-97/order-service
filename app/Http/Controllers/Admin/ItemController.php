@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\Admin\Item\StoreItemRequest;
-use App\Http\Requests\Admin\Item\UpdateItemRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
@@ -103,7 +102,7 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateItemRequest $request, Item $item)
+    public function update(StoreItemRequest $request, Item $item)
     {
         $item->update($request->all());
 

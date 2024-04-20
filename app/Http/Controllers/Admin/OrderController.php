@@ -81,29 +81,28 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $totalPrice = 0;
-        $itemsId    = [];
-        $orderItems      = [];
-        collect($request->input('items'))->map(function($item) use(&$totalPrice, &$itemsId, &$orderItems){
-            $itemsId[] = $item['id'];
+        $orderItems = [];
+        collect($request->input('items'))->map(function ($item) use (&$totalPrice, &$orderItems) {
+            $totalItemPrice = Order::calculateTotalItemPrice($item['price'], $item['count']);
             $orderItems[] = [
                 'item_id'    => Item::findOrFail($item['id'])->id,
                 'order_id'   => null,
                 'item_price' => $item['price'],
                 'item_count' => $item['count'],
-                'item_total' => $item['total'],
+                'item_total' => $totalItemPrice,
             ];
-            return $totalPrice += $item['price'];
+            return $totalPrice += $totalItemPrice;
         });
 
-        DB::transaction(function () use($request, $totalPrice, $itemsId, $orderItems){
+        DB::transaction(function () use ($request, $totalPrice, $orderItems) {
             $order = Order::create([
                 'customer_name'     => $request->input('customer_name'),
                 'customer_address'  => $request->input('customer_address'),
                 'order_description' => $request->input('order_description'),
                 'total_price'       => $totalPrice
             ]);
-    
-            foreach($orderItems as $orderItem) {
+
+            foreach ($orderItems as $orderItem) {
                 OrderItem::create([
                     'order_id'   => $order->id,
                     'item_id'    => $orderItem['item_id'],
@@ -127,9 +126,10 @@ class OrderController extends Controller
     {
         $itemOptions = Item::selectOptions();
         $orderItems = $order->orderItems;
-        $orderItems = $orderItems->map(function($item) {
+        $orderItems = $orderItems->map(function ($item) {
             return [
-                'items'      => $item->id,
+                'items'      => $item->item_id,
+                'name'       => Item::find($item->item_id)->name,
                 'item_price' => $item->item_price,
                 'item_count' => $item->item_count,
                 'item_total' => $item->item_total,
@@ -148,9 +148,53 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(StoreOrderRequest $request, Order $order)
     {
-        $order->update($request->all());
+        $totalPrice = 0;
+        $orderItems = [];
+        $oldOrderItems = $order->orderItems;
+
+        collect($request->input('items'))->map(function ($item) use (&$totalPrice, &$orderItems, $order) {
+            $totalItemPrice = Order::calculateTotalItemPrice($item['price'], $item['count']);
+            $orderItems[] = [
+                'item_id'    => Item::findOrFail($item['id'])->id,
+                'order_id'   => $order->id,
+                'item_price' => $item['price'],
+                'item_count' => $item['count'],
+                'item_total' => $totalItemPrice,
+            ];
+            return $totalPrice += $totalItemPrice;
+        });
+
+        DB::transaction(function () use ($request, $totalPrice, $orderItems, $order, $oldOrderItems) {
+            Order::where('id', $order->id)->update([
+                'customer_name'     => $request->input('customer_name'),
+                'customer_address'  => $request->input('customer_address'),
+                'order_description' => $request->input('order_description'),
+                'total_price'       => $totalPrice
+            ]);
+
+            foreach ($oldOrderItems as $orderItem) {
+                $checkItemExists = array_search($orderItem->item_id, array_column($request->input('items'), 'id'));
+                if (!$checkItemExists) {
+                    $orderItem->delete();
+                }
+            }
+
+            foreach ($orderItems as $orderItem) {
+                OrderItem::updateOrCreate(
+                    [
+                        'order_id'   => $order->id,
+                        'item_id'    => $orderItem['item_id'],
+                    ],
+                    [
+                        'item_price' => $orderItem['item_price'],
+                        'item_count' => $orderItem['item_count'],
+                        'item_total' => $orderItem['item_total'],
+                    ]
+                );
+            }
+        });
 
         return redirect()->route('admin.orders.index')
             ->with('message', 'order updated successfully.');

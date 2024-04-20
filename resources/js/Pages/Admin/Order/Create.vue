@@ -45,17 +45,34 @@ const addItem = () => {
         item_total: 0,
     });
 };
-const csrf = "{{ csrf_token() }}";
 
 const totalPrice = computed(() => {
     return localItems.reduce((acc, item) => acc + item.item_total, 0);
 });
 
-const calculateItemPrice = (item) => {
-    let selectedItem = props.itemOptions.find((i) => i.id == item.items);
+const calculateItemPrice = (item, index) => {
+    const selectedItemId = item.items;
 
-    item.item_price = selectedItem.price;
-    updateItemTotal(item);
+    const isDuplicate = localItems.some(
+        (existingItem, existingIndex) =>
+            existingItem.items === selectedItemId && existingIndex !== index
+    );
+
+    if (isDuplicate) {
+        alert("This item is already selected in another row. Please choose a different item.");
+        item.items = ""
+        return;
+    }
+
+    let selectedItem = props.itemOptions.find((i) => i.id == selectedItemId);
+
+    if (selectedItem) {
+        item.item_price = selectedItem.price;
+        updateItemTotal(item);
+    } else {
+        item.items = "";
+        console.error(`Item with ID ${selectedItemId} not found in options`);
+    }
 };
 const updateItemTotal = (item) => {
     item.item_total = item.item_price * item.item_count;
@@ -74,7 +91,7 @@ const handleSubmit = () => {
     }));
     form.items = itemsData;
 
-    form.post(route("admin.orders.store"), { _token: csrf });
+    form.post(route("admin.orders.store"), { _token: "{{ csrf_token() }}" });
 };
 </script>
 
@@ -142,7 +159,7 @@ const handleSubmit = () => {
                                 placeholder="Add Items"
                                 :error="form.errors.items"
                                 :options="itemOptions"
-                                @change="calculateItemPrice(i)"
+                                @change="calculateItemPrice(i, index)"
                             >
                                 <div
                                     class="text-red-400 text-sm"

@@ -67,7 +67,19 @@ const form = useForm({
                     </FormControl>
                 </FormField>
                 <FormField label="Item Price">
-                    <div>{{ props.item.price }}</div>
+                    <FormControl
+                        v-model="form.price"
+                        type="text"
+                        placeholder="Enter Name"
+                        :error="form.errors.price"
+                    >
+                        <div
+                            class="text-red-400 text-sm"
+                            v-if="form.errors.price"
+                        >
+                            {{ form.errors.price }}
+                        </div>
+                    </FormControl>
                 </FormField>
                 <template #footer>
                     <BaseButtons>

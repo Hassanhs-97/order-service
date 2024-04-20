@@ -24,4 +24,8 @@ class Order extends Model
     public function orderItems() {
         return $this->hasMany(OrderItem::class);
     }
+
+    public static function calculateTotalItemPrice($itemPrice, $itemCount) {
+        return $itemPrice * $itemCount;
+    }
 }

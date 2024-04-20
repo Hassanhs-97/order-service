@@ -140,13 +140,13 @@ function destroy(id) {
                 class="before:hidden lg:w-1 whitespace-nowrap"
               >
                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
-                  <BaseButton
+                  <!-- <BaseButton
                     v-if="can.manage"
                     :route-name="route('admin.orders.index', order.id)"
                     color="warning"
                     :icon="mdiCogOutline "
                     small
-                  />
+                  /> -->
                   <BaseButton
                     v-if="can.edit"
                     :route-name="route('admin.orders.edit', order.id)"

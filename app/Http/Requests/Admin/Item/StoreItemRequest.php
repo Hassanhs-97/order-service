@@ -24,10 +24,8 @@ class StoreItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_name'     => 'required|max:255',
-            'customer_address'  => 'required|max:255',
-            'order_description' => 'required|max:255',
-            'price'             => 'required|integer',
+            'name'  => 'required|max:255',
+            'price' => 'required|integer',
         ];
     }
 }
