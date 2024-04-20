@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Item;
 use BalajiDharma\LaravelCategory\Models\CategoryType;
 use BalajiDharma\LaravelMenu\Models\Menu;
 use Illuminate\Database\Seeder;
@@ -43,14 +44,23 @@ class AdminCoreSeeder extends Seeder
             'menu.item create',
             'menu.item edit',
             'menu.item delete',
-            'category list',
-            'category create',
-            'category edit',
-            'category delete',
-            'category.type list',
-            'category.type create',
-            'category.type edit',
-            'category.type delete',
+            // 'category list',
+            // 'category create',
+            // 'category edit',
+            // 'category delete',
+            // 'category.type list',
+            // 'category.type create',
+            // 'category.type edit',
+            // 'category.type delete',
+            'item list',
+            'item create',
+            'item edit',
+            'item delete',
+            'order list',
+            'order create',
+            'order edit',
+            'order delete',
+            
         ];
 
         foreach ($permissions as $permission) {
@@ -147,7 +157,7 @@ class AdminCoreSeeder extends Seeder
                 'uri'     => '/<nolink>',
                 'enabled' => 1,
                 'weight'  => 6,
-                'icon'    => 'M5 3A2 2 0 0 0 3 5H5M7 3V5H9V3M11 3V5H13V3M15 3V5H17V3M19 3V5H21A2 2 0 0 0 19 3M3 7V9H5V7M7 7V11H11V7M13 7V11H17V7M19 7V9H21V7M3 11V13H5V11M19 11V13H21V11M7 13V17H11V13M13 13V17H17V13M3 15V17H5V15M19 15V17H21V15M3 19A2 2 0 0 0 5 21V19M7 19V21H9V19M11 19V21H13V19M15 19V21H17V19M19 19V21A2 2 0 0 0 21 19Z'
+                'icon'    => 'M21 22L18 20L15 22L12 20L9 22L6 20L3 22V3H21V22Z'
             ],
             [
                 'name'      => 'Items',
@@ -155,15 +165,15 @@ class AdminCoreSeeder extends Seeder
                 'enabled'   => 1,
                 'weight'    => 1,
                 'parent_id' => 6,
-                'icon'      => 'M5 3A2 2 0 0 0 3 5H5M7 3V5H9V3M11 3V5H13V3M15 3V5H17V3M19 3V5H21A2 2 0 0 0 19 3M3 7V9H5V7M7 7V11H11V7M13 7V11H17V7M19 7V9H21V7M3 11V13H5V11M19 11V13H21V11M7 13V17H11V13M13 13V17H17V13M3 15V17H5V15M19 15V17H21V15M3 19A2 2 0 0 0 5 21V19M7 19V21H9V19M11 19V21H13V19M15 19V21H17V19M19 19V21A2 2 0 0 0 21 19Z'
+                'icon'      => 'M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3M7 7H9V9H7V7M7 11H9V13H7V11M7 15H9V17H7V15M17 17H11V15H17V17M17 13H11V11H17V13M17 9H11V7H17V9Z'
             ],
             [
-                'name'      => 'Order',
+                'name'      => 'Orders',
                 'uri'       => '/<admin>/orders',
                 'enabled'   => 1,
                 'weight'    => 2,
                 'parent_id' => 6,
-                'icon'      => 'M5 3A2 2 0 0 0 3 5H5M7 3V5H9V3M11 3V5H13V3M15 3V5H17V3M19 3V5H21A2 2 0 0 0 19 3M3 7V9H5V7M7 7V11H11V7M13 7V11H17V7M19 7V9H21V7M3 11V13H5V11M19 11V13H21V11M7 13V17H11V13M13 13V17H17V13M3 15V17H5V15M19 15V17H21V15M3 19A2 2 0 0 0 5 21V19M7 19V21H9V19M11 19V21H13V19M15 19V21H17V19M19 19V21A2 2 0 0 0 21 19Z'
+                'icon'      => 'M9.86 21.43L9 22L6 20L3 22V3H21V10.2C20.1 9.82 19 10 18.24 10.75L9.86 19.13V21.43M11.86 19.96L18 13.83L20.03 15.87L13.9 22H11.86V19.96M20.39 12.15C20.37 12.13 20.34 12.1 20.31 12.09C20.12 11.96 19.86 11.97 19.69 12.13L19.67 12.15L18.69 13.13L20.73 15.17L21.71 14.19C21.91 14 21.91 13.67 21.71 13.47L20.39 12.15Z'
             ],
         ];
 
@@ -182,5 +192,18 @@ class AdminCoreSeeder extends Seeder
         //     'description'  => 'Site Tags',
         //     'is_flat'      => true,
         // ]);
+
+        // create items
+        $data = [
+            [
+                'name'  => 'Pizza',
+                'price' => '20000',
+            ],
+            [
+                'name'  => 'Burger',
+                'price' => '25000',
+            ],
+        ];
+        Item::insert($data);
     }
 }
