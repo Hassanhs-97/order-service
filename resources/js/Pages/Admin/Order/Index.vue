@@ -18,7 +18,7 @@ import BaseButtons from "@/Components/BaseButtons.vue";
 import NotificationBar from "@/Components/NotificationBar.vue";
 import Pagination from "@/Components/Admin/Pagination.vue";
 import Sort from "@/Components/Admin/Sort.vue";
-import { router } from "@inertiajs/vue3";
+import { PDFDocument, StandardFonts } from "pdf-lib";
 
 const props = defineProps({
     orders: {
@@ -46,11 +46,23 @@ function destroy(id) {
         formDelete.delete(route("admin.orders.destroy", id));
     }
 }
+
 async function downloadOrderPdf(orderId) {
     try {
-        window.open(route("admin.orders.downloadOrderPdf", orderId), '_blank');
+        const response = await fetch(
+            route("admin.orders.downloadOrderPdf", orderId)
+        );
+        const arrayBuffer      = await response.arrayBuffer();
+        const existingPdfBytes = new Uint8Array(arrayBuffer);
+        const pdfDoc           = await PDFDocument.load(existingPdfBytes);
+
+        const pdfBytes = await pdfDoc.save();
+        const blob     = new Blob([pdfBytes], { type: "application/pdf" });
+        const url      = URL.createObjectURL(blob);
+
+        window.open(url, "_blank");
     } catch (error) {
-        console.error("Error downloading PDF:", error);
+        console.error("Error downloading or manipulating PDF:", error);
     }
 }
 </script>

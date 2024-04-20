@@ -24,6 +24,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "pdf-lib": "^1.17.1",
         "select2": "^4.1.0-rc.0",
         "vue-select2": "^0.2.6",
         "vue3-select2-component": "^0.1.7"
