@@ -86,6 +86,18 @@ class ItemController extends Controller
     }
 
     /**
+     * Show the the specified model.
+     *
+     * @return \Inertia\Response
+     */
+    public function show(Item $item)
+    {
+        return Inertia::render('Admin/Item/Show', [
+            'item' => $item,
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @return \Inertia\Response

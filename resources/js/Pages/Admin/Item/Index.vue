@@ -3,6 +3,7 @@ import { Head, Link, useForm } from "@inertiajs/vue3";
 import {
     mdiMenu,
     mdiPlus,
+    mdiCogOutline,
     mdiSquareEditOutline,
     mdiTrashCan,
     mdiAlertBoxOutline,
@@ -103,12 +104,12 @@ function destroy(id) {
                     </thead>
 
                     <tbody>
-                        <tr v-for="orderItem in items.data" :key="orderItem.id">
+                        <tr v-for="item in items.data" :key="item.id">
                             <td data-label="Name">
-                                {{ orderItem.name }}
+                                {{ item.name }}
                             </td>
                             <td data-label="Description">
-                                {{ orderItem.price }}
+                                {{ item.price }}
                             </td>
                             <td
                                 v-if="can.edit || can.delete || can.manage"
@@ -119,11 +120,20 @@ function destroy(id) {
                                     no-wrap
                                 >
                                     <BaseButton
+                                        v-if="can.manage"
+                                        :route-name="
+                                            route('admin.items.show', item.id)
+                                        "
+                                        color="warning"
+                                        :icon="mdiCogOutline"
+                                        small
+                                    />
+                                    <BaseButton
                                         v-if="can.edit"
                                         :route-name="
                                             route(
                                                 'admin.items.edit',
-                                                orderItem.id
+                                                item.id
                                             )
                                         "
                                         color="info"
@@ -135,7 +145,7 @@ function destroy(id) {
                                         color="danger"
                                         :icon="mdiTrashCan"
                                         small
-                                        @click="destroy(orderItem.id)"
+                                        @click="destroy(item.id)"
                                     />
                                 </BaseButtons>
                             </td>

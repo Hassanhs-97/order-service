@@ -117,6 +117,9 @@ function destroy(id) {
               <th>
                 Total Price
               </th>
+              <th>
+                Created At
+              </th>
               <th v-if="can.edit || can.delete || can.manage">Actions</th>
             </tr>
           </thead>
@@ -135,18 +138,21 @@ function destroy(id) {
                <td data-label="customer_address">
                   {{ order.total_price }}
               </td>
+               <td data-label="customer_address">
+                  {{ order.formatted_created_at }}
+              </td>
               <td
                 v-if="can.edit || can.delete || can.manage"
                 class="before:hidden lg:w-1 whitespace-nowrap"
               >
                 <BaseButtons type="justify-start lg:justify-end" no-wrap>
-                  <!-- <BaseButton
+                  <BaseButton
                     v-if="can.manage"
-                    :route-name="route('admin.orders.index', order.id)"
+                    :route-name="route('admin.orders.show', order.id)"
                     color="warning"
                     :icon="mdiCogOutline "
                     small
-                  /> -->
+                  />
                   <BaseButton
                     v-if="can.edit"
                     :route-name="route('admin.orders.edit', order.id)"

@@ -179,7 +179,6 @@ const handleSubmit = () => {
                                 type="number"
                                 placeholder="0"
                                 :error="form.errors.item_price"
-                                :disabled="true"
                             >
                                 <div
                                     class="text-red-400 text-sm"

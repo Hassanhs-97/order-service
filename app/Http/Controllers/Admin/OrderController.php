@@ -118,6 +118,32 @@ class OrderController extends Controller
     }
 
     /**
+     * Show the the specified model.
+     *
+     * @return \Inertia\Response
+     */
+    public function show(Order $order)
+    {
+        $itemOptions = Item::selectOptions();
+        $orderItems = $order->orderItems;
+        $orderItems = $orderItems->map(function ($item) {
+            return [
+                'items'      => $item->item_id,
+                'name'       => Item::find($item->item_id)->name,
+                'item_price' => $item->item_price,
+                'item_count' => $item->item_count,
+                'item_total' => $item->item_total,
+            ];
+        });
+
+        return Inertia::render('Admin/Order/Show', [
+            'order'       => $order,
+            'itemOptions' => $itemOptions,
+            'orderItems'  => $orderItems,
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @return \Inertia\Response
