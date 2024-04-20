@@ -80,6 +80,9 @@ const calculateItemPrice = (item, index) => {
 };
 
 const updateItemTotal = (item) => {
+    if (item.item_count < 1) {
+        item.item_count = 1;
+    }
     item.item_total = item.item_price * item.item_count;
 };
 
@@ -96,7 +99,9 @@ const handleSubmit = () => {
     }));
     form.items = itemsData;
 
-    form.post(route("admin.orders.update", props.order.id), { _token: "{{ csrf_token() }}" });
+    form.post(route("admin.orders.update", props.order.id), {
+        _token: "{{ csrf_token() }}",
+    });
 };
 </script>
 

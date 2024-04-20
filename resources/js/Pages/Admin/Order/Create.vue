@@ -82,6 +82,12 @@ const handleRemoveItem = (index) => {
     localItems.splice(index, 1);
 };
 
+const handleItemCountChange = (item) => {
+  if (item.item_count < 1) {
+    item.item_count = 1;
+  }
+};
+
 const handleSubmit = () => {
     const itemsData = localItems.map((item) => ({
         id: item.items,
@@ -198,6 +204,7 @@ const handleSubmit = () => {
                                 type="number"
                                 placeholder="1"
                                 :error="form.errors.item_count"
+                                @change="handleItemCountChange(i)"
                             >
                                 <div
                                     class="text-red-400 text-sm"
