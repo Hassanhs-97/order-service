@@ -91,7 +91,9 @@ const handleRemoveItem = (index) => {
 };
 
 const handleSubmit = () => {
-    const itemsData = localItems.map((item) => ({
+    const validItems = localItems.filter(item => item.items !== "");
+
+    const itemsData = validItems.map((item) => ({
         id   : item.items,
         price: item.item_price,
         count: item.item_count,
