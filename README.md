@@ -1,5 +1,5 @@
 <h1 align="center">Order Service</h1>
-<h3 align="center">A Single page Vue admin panel for Ordering projects.</h3>
+<h3 align="center">A Single page Vue admin panel for Ordering.</h3>
 
 ## Built with
 - [Laravel 11](https://github.com/laravel/framework)
@@ -14,7 +14,7 @@
 ## Installation
 
 ### With Docker
-- To get started, you need to install [Docker Desktop](https://www.docker.com/).
+- To get started, you need to install [Docker](https://www.docker.com/).
 - You may run the following command in your terminal
 - `git clone git@github.com:Hassanhs-97/order-service.git`
 - `cd order-service/docker`
