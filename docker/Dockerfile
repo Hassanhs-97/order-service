@@ -32,13 +32,11 @@ RUN docker-php-ext-configure gd
 RUN docker-php-ext-install gd
 RUN docker-php-ext-enable mysqli
 
-COPY entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
-
-RUN curl -sL https://deb.nodesource.com/setup_21.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_21.x | bash -
 RUN apt-get update && apt-get install -y nodejs
+
+COPY package.json /app/package.json
+COPY package-lock.json /app/package-lock.json
 
 RUN npm install
 RUN npm run build
