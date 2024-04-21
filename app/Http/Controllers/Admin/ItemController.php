@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\Admin\Item\StoreItemRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Item;
+use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -28,7 +29,7 @@ class ItemController extends Controller
         $items = (new Item())->newQuery();
 
         if (request()->has('search')) {
-            $items->where('name', 'Like', '%'.request()->input('search').'%');
+            $items->where('name', 'Like', '%' . request()->input('search') . '%');
         }
 
         if (request()->query('sort')) {
@@ -44,8 +45,8 @@ class ItemController extends Controller
         }
 
         $items = $items->paginate(config('admin.paginate.per_page'))
-        ->onEachSide(config('admin.paginate.each_side'))
-        ->appends(request()->query());
+            ->onEachSide(config('admin.paginate.each_side'))
+            ->appends(request()->query());
 
         return Inertia::render('Admin/Item/Index', [
             'items' => $items,
@@ -129,9 +130,16 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        $item->delete();
+        if (!OrderItem::where('item_id', $item->id)->exists()) {
+
+            $item->delete();
+
+            return redirect()->route('admin.items.index')
+                ->with('message', __('item deleted successfully'));
+        }
 
         return redirect()->route('admin.items.index')
-            ->with('message', __('item deleted successfully'));
+        ->with('message', __('item can not delete because it used in orders!'));
+
     }
 }
